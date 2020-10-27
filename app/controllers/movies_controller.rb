@@ -34,9 +34,12 @@ class MoviesController < ApplicationController
     session[:ratings] = ratings
     session[:sorted] = @sorted 
     
+    # select all ratings
+    @all_ratings = Movie.all_ratings
+    
     # pull the relevant ratings
     if ratings.nil?
-      @ratings_to_show = [] 
+      @ratings_to_show = @all_ratings
     else
       keys = ratings.keys
       @ratings_to_show = keys 
@@ -55,8 +58,6 @@ class MoviesController < ApplicationController
       @movies = Movie.with_ratings(@ratings_to_show)
     end 
     
-    # select all ratings
-    @all_ratings = Movie.all_ratings
     
   end
 
