@@ -20,10 +20,13 @@ class MoviesController < ApplicationController
     # check if session exists
     live = session[:live]
     
-    # if session exists and we did not come from home, we need to repull sorting and ratings 
-    if live and !home 
+    # if session exists or we did not come from home, we need to repull sorting and ratings 
+    #if live and !home 
+    
+    if live and !home
       ratings = session[:ratings]
       @sorted = session[:sorted]
+      redirect_to movies_path(:ratings => ratings, :sorted => @sorted, :home => "1")
     else 
       # else session doesn't exist or we came from home, pull values as usual
       @sorted = params[:sorted]
