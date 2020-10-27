@@ -7,20 +7,42 @@ class MoviesController < ApplicationController
   end
 
   def index
-        
+    
     # pull and assign selected ratings from params 
     ratings = params[:ratings]
+    
+    # check if :home == 1
+    home_check = params[:home]
+    if home_check == "1"
+      home = true
+    end 
+    
+    # check if session exists
+    live = session[:live]
+    
+    # if session exists and we did not come from home, we need to repull sorting and ratings 
+    if live and !home 
+      ratings = session[:ratings]
+      @sorted = session[:sorted]
+    else 
+      # else session doesn't exist or we came from home, pull values as usual
+      @sorted = params[:sorted]
+    end 
+    
+    # instantiate session and finalized values
+    session[:live] = true
+    session[:ratings] = ratings
+    session[:sorted] = @sorted 
+    
+    # pull the relevant ratings
     if ratings.nil?
       @ratings_to_show = [] 
-    else 
+    else
       keys = ratings.keys
       @ratings_to_show = keys 
     end 
     
     #assign {hilite} and {text-primary} (helper) to @title_sorted and @release_sorted 
-    
-    # @sorted == :title or @sorted == :release
-    @sorted = params[:sort]
     
     # handle sorting and output
     if @sorted == "title"
