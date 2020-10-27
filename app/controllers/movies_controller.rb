@@ -7,7 +7,8 @@ class MoviesController < ApplicationController
   end
 
   def index
-   
+        
+    # pull and assign selected ratings from params 
     ratings = params[:ratings]
     if ratings.nil?
       @ratings_to_show = [] 
@@ -16,11 +17,25 @@ class MoviesController < ApplicationController
       @ratings_to_show = keys 
     end 
     
-    @movies = Movie.with_ratings(@ratings_to_show)
+    #assign {hilite} and {text-primary} (helper) to @title_sorted and @release_sorted 
+    
+    # @sorted == :title or @sorted == :release
+    @sorted = params[:sort]
+    
+    # handle sorting and output
+    if @sorted == "title"
+      @movies = Movie.order(:title).with_ratings(@ratings_to_show)
+      @title_sorted = "hilite text-primary"
+    elsif @sorted == "release"
+      @movies = Movie.order(:release_date).with_ratings(@ratings_to_show)
+      @release_sorted = "hilite text-primary"
+    else
+      @movies = Movie.with_ratings(@ratings_to_show)
+    end 
+    
+    # select all ratings
     @all_ratings = Movie.all_ratings
     
-
-   
   end
 
   def new
